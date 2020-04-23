@@ -1,15 +1,25 @@
 package org.example;
 
+import org.example.dao.CountryDao;
+import org.example.dao.CountryDaoImpl;
+import org.example.model.Country;
+
 import java.sql.*;
 
 public class App
 {
-    private static final String connectionString = "jdbc:mysql://localhost:3306/world?&autoReconnect=true&useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=Europe/Berlin";
-    private static final String userName = "root";
-    private static final String userPassword = "root";
+
 
     public static void main( String[] args )
     {
+        CountryDao countryDao = new CountryDaoImpl();
+
+        Country country = countryDao.create(new Country("LEC","Lexicon","Coding"));
+
+        System.out.println(country);
+    }
+}
+/*
         Connection connection = null;
         Statement statement = null;
         ResultSet resultSet = null;
@@ -46,5 +56,4 @@ public class App
                 e.printStackTrace();
             }
         }
-    }
-}
+ */
