@@ -7,16 +7,25 @@ import org.example.model.Country;
 import java.io.*;
 import java.nio.file.Paths;
 import java.sql.*;
+import java.util.List;
 import java.util.Properties;
 
 public class App
 {
-
+    private static String connectionString;
+    private static String userName;
+    private static String password;
 
     public static void main( String[] args )
     {
         //saveToPropFile();
         readPropFile();
+
+        CountryDao countryDao = new CountryDaoImpl(connectionString, userName, password);
+
+        List<Country> countries = countryDao.getContinent("Asia");
+
+        countries.forEach(System.out::println);
     }
 
     private static void saveToPropFile() {
@@ -40,7 +49,7 @@ public class App
 
     }
 
-    private static Properties readPropFile() {
+    private static void readPropFile() {
         Properties prop = null;
         try (InputStream input = new FileInputStream("./config.properties")) {
 
@@ -54,15 +63,14 @@ public class App
                 prop.load(input);
 
                 //get the property value and print it out
-                System.out.println(prop.getProperty("db.url"));
-                System.out.println(prop.getProperty("db.user"));
-                System.out.println(prop.getProperty("db.password"));
+                connectionString = prop.getProperty("db.url");
+                userName = prop.getProperty("db.user");
+                password = prop.getProperty("db.password");
             }
 
         } catch (IOException ex) {
             ex.printStackTrace();
         }
-        return prop;
     }
 
 }

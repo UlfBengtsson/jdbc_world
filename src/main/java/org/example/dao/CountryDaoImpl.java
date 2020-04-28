@@ -8,9 +8,15 @@ import java.util.List;
 
 public class CountryDaoImpl implements CountryDao {
 
-    private static final String connectionString = "jdbc:mysql://localhost:3306/world?&autoReconnect=true&useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=Europe/Berlin";
-    private static final String userName = "root";
-    private static final String userPassword = "root";
+    private final String connectionString;
+    private final String userName;
+    private final String userPassword;
+
+    public CountryDaoImpl(String connectionString, String userName, String userPassword) {
+        this.connectionString = connectionString;
+        this.userName = userName;
+        this.userPassword = userPassword;
+    }
 
     @Override
     public List<Country> getContinent(String continent) {
@@ -19,7 +25,7 @@ public class CountryDaoImpl implements CountryDao {
 
         try (
                 Connection connection = DriverManager.getConnection(connectionString, userName, userPassword);
-                PreparedStatement preparedStatement = connection.prepareStatement("SELECT * FROM country WHERE continent = ?", ResultSet.TYPE_FORWARD_ONLY);//OCP book page 518
+                PreparedStatement preparedStatement = connection.prepareStatement("SELECT * FROM country WHERE continent = ?", ResultSet.TYPE_FORWARD_ONLY, ResultSet.CONCUR_READ_ONLY);//OCP book page 518
             )
         {
             preparedStatement.setString(1, continent);
